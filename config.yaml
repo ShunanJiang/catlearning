@@ -1,0 +1,101 @@
+# QQQ Trading Agent Configuration
+
+# Trading Settings
+trading:
+  symbol: "QQQ"
+  initial_capital: 100000
+  commission: 0.001  # 0.1% per trade
+  slippage: 0.0005   # 0.05% slippage
+
+# Data Settings
+data:
+  start_date: "2019-01-01"
+  end_date: null  # null means today
+  interval: "1d"  # 1d, 1h, 5m, etc.
+  cache_enabled: true
+  cache_dir: "./data/cache"
+
+# Strategy Settings
+strategies:
+  enabled:
+    - momentum
+    - mean_reversion
+    - ml_hybrid
+    - options_income
+
+  momentum:
+    lookback_period: 20
+    entry_threshold: 0.02
+    exit_threshold: -0.01
+
+  mean_reversion:
+    lookback_period: 30
+    entry_std: 2.0
+    exit_std: 0.5
+
+  ml_hybrid:
+    features:
+      - returns
+      - volume
+      - volatility
+      - rsi
+      - macd
+    lookback: 60
+    retrain_interval: 30  # days
+
+  options_income:
+    strategies:
+      - covered_call
+      - cash_secured_put
+    delta_target: 0.30
+    dte_range: [30, 45]  # days to expiration
+
+# Risk Management
+risk:
+  max_position_size: 0.3  # 30% of portfolio
+  max_drawdown: 0.15      # 15% max drawdown
+  stop_loss: 0.05         # 5% stop loss
+  take_profit: 0.15       # 15% take profit
+  max_leverage: 1.0
+
+# Backtesting
+backtest:
+  split_ratio: 0.8  # 80% training, 20% testing
+  walk_forward: true
+  window_size: 252  # trading days
+  step_size: 63     # quarterly rebalancing
+
+# Claude Agent Settings
+claude:
+  model: "claude-sonnet-4-5-20250929"
+  max_tokens: 4096
+  temperature: 0.7
+
+  agents:
+    market_analyzer:
+      enabled: true
+      update_frequency: "daily"
+
+    strategy_optimizer:
+      enabled: true
+      optimization_frequency: "weekly"
+
+    risk_assessor:
+      enabled: true
+      check_frequency: "pre_trade"
+
+    signal_interpreter:
+      enabled: true
+      confidence_threshold: 0.7
+
+# Performance Metrics
+metrics:
+  - total_return
+  - sharpe_ratio
+  - sortino_ratio
+  - max_drawdown
+  - win_rate
+  - profit_factor
+  - calmar_ratio
+  - alpha
+  - beta
